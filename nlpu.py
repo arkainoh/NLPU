@@ -54,7 +54,7 @@ class Vocabulary:
 	def at(self, i):
 		return next(islice(self.dict, i, None))
 
-	# word2vec = str -> numpy.array
+	# word2vec = str -> list
 	# get one-hot encoded vector of a word
 	def word2vec(self, word):
 		v = [0 for i in range(self.size())]
@@ -62,16 +62,16 @@ class Vocabulary:
 			v[self.index(word)] = 1
 		else:
 			raise ValueError("Word \'" + word + "\' Not Found")
-		return np.array(v)
+		return v
 
-	# doc2vec = list -> numpy.array
-	# get word count vector of the given tokens
+	# doc2vec = list -> list
+	# get tf vector of the given tokens
 	def doc2vec(self, tokens):
 		v = [0 for i in range(self.size())]
 		for token in tokens:
 			if token in self.dict:
 				v[self.index(token)] += 1
-		return np.array(v)
+		return v
 
 	def save(self, filename):
 		f = open(filename, 'w', encoding = 'utf-8')
