@@ -3,6 +3,7 @@ import numpy as np
 import nltk
 from nltk.corpus import stopwords as sw
 import math
+from itertools import islice
 
 def tokenize(inputstr, onlyalpha = True, stopwords = False, stemmer = True):
 	inputstr = inputstr.lower()
@@ -30,36 +31,34 @@ def cosine_similarity(A, B):
 
 class Vocabulary:
 	def __init__(self):
-		self.vector = OrderedDict()
-		self.entry = []
+		self.dict = OrderedDict()
 
 	def add(self, token):
-		if token not in self.vector and not token.isspace() and token != '':
-			self.vector[token] = len(self.vector)
-			self.entry.append(token)
+		if token not in self.dict and not token.isspace() and token != '':
+			self.dict[token] = len(self.dict)
 
 	def addall(self, tokens):
 		for token in tokens:
 			self.add(token)
 
 	def has(self, token):
-		return token in self.vector
+		return token in self.dict
 
 	def index(self, token):
-		return self.vector[token]
+		return self.dict[token]
 
 	def size(self):
-		return len(self.vector)
+		return len(self.dict)
 
 	# get ith word in the vector
 	def at(self, i):
-		return self.entry[i]
+		return next(islice(self.dict, i, None))
 
 	# word2vec = str -> numpy.array
 	# get one-hot encoded vector of a word
 	def word2vec(self, word):
 		v = [0 for i in range(self.size())]
-		if word in self.vector:
+		if word in self.dict:
 			v[self.index(word)] = 1
 		else:
 			raise ValueError("Word \'" + word + "\' Not Found")
@@ -70,13 +69,13 @@ class Vocabulary:
 	def doc2vec(self, tokens):
 		v = [0 for i in range(self.size())]
 		for token in tokens:
-			if token in self.vector:
+			if token in self.dict:
 				v[self.index(token)] += 1
 		return np.array(v)
 
 	def save(self, filename):
 		f = open(filename, 'w', encoding = 'utf-8')
-		for word in self.vector:
+		for word in self.dict:
 			f.write(word + '\n')
 		f.close()
 
@@ -89,8 +88,8 @@ class Vocabulary:
 	
 	def __str__(self):
 		s = "Vocabulary("
-		for word in self.vector:
-			s += (str(self.vector[word]) + ": " + word + ", ")
+		for word in self.dict:
+			s += (str(self.dict[word]) + ": " + word + ", ")
 		if self.size() != 0:
 			s = s[:-2]
 		s += ")"
