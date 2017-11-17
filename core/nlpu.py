@@ -1,8 +1,8 @@
-from collections import OrderedDict
-import numpy as np
 import nltk
 from nltk.corpus import stopwords as sw
 import math
+
+from collections import OrderedDict
 from itertools import islice
 
 def tokenize(inputstr, onlyalpha = True, stopwords = False, stemmer = True):
@@ -32,6 +32,7 @@ def cosine_similarity(A, B):
 class Vocabulary:
 	def __init__(self):
 		self.dict = OrderedDict()
+		self.__module__ = 'nlpu'
 
 	def add(self, token):
 		if token not in self.dict and not token.isspace() and token != '':
