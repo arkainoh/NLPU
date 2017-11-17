@@ -1,2 +1,2 @@
-from nlpu.src.nlpu import *
+from nlpu.core.nlp_utils import *
 from . import data

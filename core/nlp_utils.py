@@ -32,7 +32,6 @@ def cosine_similarity(A, B):
 class Vocabulary:
 	def __init__(self):
 		self.dict = OrderedDict()
-		self.__module__ = 'nlpu'
 
 	def add(self, token):
 		if token not in self.dict and not token.isspace() and token != '':
@@ -95,4 +94,7 @@ class Vocabulary:
 			s = s[:-2]
 		s += ")"
 		return s
+	
+	def __repr__(self):
+		return self.__str__()
 
